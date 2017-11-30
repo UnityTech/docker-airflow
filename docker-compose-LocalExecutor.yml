@@ -8,7 +8,7 @@ services:
             - POSTGRES_DB=airflow
 
     webserver:
-        image: puckel/docker-airflow:1.8.2
+        image: registry2.applifier.info:5005/docker-airflow:latest
         restart: always
         depends_on:
             - postgres
@@ -20,3 +20,15 @@ services:
         ports:
             - "8080:8080"
         command: webserver
+
+    scheduler:
+        image: registry2.applifier.info:5005/docker-airflow:latest
+        restart: always
+        depends_on:
+            - postgres
+        volumes:
+            - ./dags:/usr/local/airflow/dags
+        environment:
+            - LOAD_EX=n
+            - EXECUTOR=Local
+        command: scheduler
